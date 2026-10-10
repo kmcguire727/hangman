@@ -1,14 +1,14 @@
 #!/usr/bin/env ruby
 
-require_relative 'lib/host'
-require_relative 'lib/player'
+require_relative 'lib/game'
 
-host = HangmanHost.new('bin/google-10000-english-no-swears.txt')
-player = Player.new
-host.welcome
+game = Hangman.new('bin/google-10000-english-no-swears.txt')
+game.welcome
 
-until host.over?
-  host.word_display_to_user
-  player.guess_log << host.request_guess
-  host.guess_correct?(player.guess_log[-1])
+until game.over?
+  game.word_display_to_user
+  game.request_guess
+  game.guess_correct?(game.guess_log[-1])
 end
+
+game.win_or_lose
