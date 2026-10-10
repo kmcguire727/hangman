@@ -1,86 +1,71 @@
 module Art
-  
-  def Art.strike_1
-    puts <<~'LOGO'   
-  +---+
-  |   |
-      |
-      |
-      |
-      |
-=========
-    LOGO
-  end
+  STAGES = [
+    <<~'ONE',
+    +---+
+    |   |
+        |
+        |
+        |
+        |
+  =========
+    ONE
+    <<~'TWO',
+    +---+
+    |   |
+    O   |
+        |
+        |
+        |
+  =========
+    TWO
+    <<~'THREE',
+    +---+
+    |   |
+    O   |
+    |   |
+        |
+        |
+  =========
+    THREE
+    <<~'FOUR',
+    +---+
+    |   |
+    O   |
+   /|   |
+        |
+        |
+  =========
+    FOUR
+    <<~'FIVE',
+    +---+
+    |   |
+    O   |
+   /|\  |
+        |
+        |
+  =========
+    FIVE
+    <<~'SIX',
+    +---+
+    |   |
+    O   |
+   /|\  |
+   /    |
+        |
+  =========
+    SIX
+    <<~'SEVEN',
+      +---+
+      |   |
+      O   |
+     /|\  |
+     / \  |
+          |
+    =========
+    SEVEN
+  ].freeze
 
-  def Art.strike_2
-    puts <<~'LOGO'   
-  +---+
-  |   |
-  O   |
-      |
-      |
-      |
-=========
-    LOGO
+  def self.puts_art(index)
+    puts STAGES[index]
   end
-
-  def Art.strike_3
-    puts <<~'LOGO'   
-  +---+
-  |   |
-  O   |
-  |   |
-      |
-      |
-=========
-    LOGO
-  end
-  def Art.strike_4
-    puts <<~'LOGO'   
-  +---+
-  |   |
-  O   |
- /|   |
-      |
-      |
-=========
-    LOGO
-  end
-
-  def Art.strike_5
-    puts <<~'LOGO'   
-  +---+
-  |   |
-  O   |
- /|\  |
-      |
-      |
-=========
-    LOGO
-  end
-
-  def Art.strike_6
-    puts <<~'LOGO'   
-  +---+
-  |   |
-  O   |
- /|\  |
- /    |
-      |
-=========
-    LOGO
-  end
-
-  def Art.game_over
-    puts <<~'LOGO'   
-  ┌───┐
-  │   │
-  O   │
- /║\  │
- / \  │
-      │
-══════╧══
-    LOGO
-  end
-
 end

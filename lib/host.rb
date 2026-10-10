@@ -1,17 +1,16 @@
 require_relative './art'
 
 class HangmanHost
+  NUM_OF_GUESSES = 7
   MIN_WORD_SIZE = 5
   MAX_WORD_SIZE = 12
 
-  attr_accessor :choices, :file_path, :secret_word, :word_display, :guesses_left
+  attr_accessor :file_path, :secret_word, :word_display, :guesses_left
 
   def initialize(dict_file_path)
-    self.guesses_left = 7
+    self.guesses_left = NUM_OF_GUESSES
     self.file_path = dict_file_path
-    self.choices = []   # this is an intentional choice since it'll be easier to iterate through and map! on guesses
-    collect_words
-    self.secret_word = self.choices.sample
+    self.secret_word = get_secret_word
     self.word_display = config_word_display
   end
 
@@ -22,20 +21,22 @@ class HangmanHost
     puts "The word to guess is: #{self.secret_word}"  # For Debug / Verification
   end
 
-  def collect_words
+  def get_secret_word
     # Use the file to pull the options we want into memory and then close it
     # rather then pulling in words we can't use and needing to iterate over them 
+    choices = []
     f = File.open(self.file_path, 'r')
       f.each_with_index do |w, i|
-        w.length > MIN_WORD_SIZE && w.length < MAX_WORD_SIZE ? self.choices << w : next
+        word = w.chomp
+        word.length >= MIN_WORD_SIZE && word.length <= MAX_WORD_SIZE ? choices << word : next
       end
     f.close
+    return choices.sample
   end
 
   def config_word_display
     display = []
-    # -1 on the length required to prevent bug where array is always +1 the actual length of the word
-    (self.secret_word.length - 1).times do
+    (self.secret_word.length).times do
       display << "_"
     end
     return display
@@ -47,9 +48,26 @@ class HangmanHost
 
   def request_guess
     puts "You have #{self.guesses_left} guesses remaining"
-    p 'Make your guess: '
+    print 'Make your guess: '
     guess = gets.chomp.downcase
     return guess
+  end
+
+  def guess_correct?(char)
+    was_char_found = false
+    secret_word_array = self.secret_word.split('')
+
+    secret_word_array.each_with_index do |v, i|
+      if v == char
+        was_char_found = true
+        self.word_display[i] = char
+      end
+    end
+    self.guesses_left -= 1 unless was_char_found
+  end
+
+  def over?
+    return false
   end
 
 end
