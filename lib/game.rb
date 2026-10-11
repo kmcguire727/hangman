@@ -1,3 +1,4 @@
+require 'yaml'
 require_relative './art'
 
 class Hangman
@@ -5,9 +6,10 @@ class Hangman
   MIN_WORD_SIZE = 5
   MAX_WORD_SIZE = 12
 
-  attr_accessor :file_loaded, :secret_word, :word_display, :guesses_left, :guess_log, :game_won
+  attr_accessor :file_loaded, :secret_word, :word_display, :guesses_left, :guess_log, :game_won, :save_path
 
   def initialize(dict_file_path)
+    self.save_path = './data/'
     self.game_won = false
     self.guesses_left = NUM_OF_GUESSES
     self.file_loaded = dict_file_path
@@ -20,6 +22,11 @@ class Hangman
     puts '-------------------'
     puts 'Welcome to Hangman!'
     puts '-------------------'
+  end
+
+  def save_game
+    path =  File.join(self.save_path, 'save.yml')
+    File.write(path, YAML.dump(self))
   end
   
   def get_secret_word
