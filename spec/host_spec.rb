@@ -1,6 +1,6 @@
 require_relative '../lib/host'
 
-RSpec.describe HangmanHost do
+RSpec.describe HangmanH do
   subject(:host) { described_class.new(word_file) }
 
   # __dir__ makes the path independent of where you run rspec from

@@ -5,9 +5,10 @@ class Hangman
   MIN_WORD_SIZE = 5
   MAX_WORD_SIZE = 12
 
-  attr_accessor :file_loaded, :secret_word, :word_display, :guesses_left, :guess_log
+  attr_accessor :file_loaded, :secret_word, :word_display, :guesses_left, :guess_log, :game_won
 
   def initialize(dict_file_path)
+    self.game_won = false
     self.guesses_left = NUM_OF_GUESSES
     self.file_loaded = dict_file_path
     self.secret_word = get_secret_word
@@ -19,7 +20,6 @@ class Hangman
     puts '-------------------'
     puts 'Welcome to Hangman!'
     puts '-------------------'
-    puts "The word to guess is: #{self.secret_word}"  # For Debug / Verification
   end
   
   def get_secret_word
@@ -44,20 +44,21 @@ class Hangman
   end
 
   def word_display_to_user
-    puts "Word: #{self.word_display.join(' ')}"
+    puts "\nWord: #{self.word_display.join(' ')}"
   end
 
   def request_guess
+    Art.puts_art(NUM_OF_GUESSES - self.guesses_left - 1) unless NUM_OF_GUESSES == self.guesses_left
+
     puts "You have #{self.guesses_left} guesses remaining"
     print 'Make your guess: '
     self.guess_log << gets.chomp.downcase
   end
 
-  def guess_correct?(char)
+  def guess_correct?(sec_wrd_arr = self.secret_word.split(''),char)
     was_char_found = false
-    secret_word_array = self.secret_word.split('')
 
-    secret_word_array.each_with_index do |v, i|
+    sec_wrd_arr.each_with_index do |v, i|
       if v == char
         was_char_found = true
         self.word_display[i] = char
@@ -67,19 +68,24 @@ class Hangman
   end
 
   def over?
-    if self.guesses_left > 0
-      return false
-    else
-      win_or_lose
+    if self.word_display.join('') == self.secret_word
+      self.game_won = true
       return true
+    elsif self.guesses_left <= 0
+      return true
+    else
+      return false
     end
   end
 
   def win_or_lose
-    if self.guesses_left <= 0
-      puts "You lose (I think...the logic isn't written yet)"
-    else
+    if self.game_won
       puts "You win!"
+    else
+      Art.puts_art(-1)
+      puts "You lose."
+      puts "The word was: #{self.secret_word}"
+      print "You guessed: #{self.guess_log}\n"
     end
   end
 
