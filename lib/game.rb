@@ -28,6 +28,16 @@ class Hangman
     path =  File.join(self.save_path, 'save.yml')
     File.write(path, YAML.dump(self))
   end
+
+  def continue?
+    print "Start a new game (n) or load saved data (s): "
+    gets.chomp.downcase == 's' ? true : false
+  end
+
+  def load_game
+    path =  File.join(self.save_path, 'save.yml')
+    YAML.load_file(path, permitted_classes: [Hangman])
+  end
   
   def get_secret_word
     # Use the file to pull the options we want into memory and then close it
@@ -54,13 +64,35 @@ class Hangman
     puts "\nWord: #{self.word_display.join(' ')}"
   end
 
-  def request_guess
-    Art.puts_art(NUM_OF_GUESSES - self.guesses_left - 1) unless NUM_OF_GUESSES == self.guesses_left
+  def prompt_for_guess
+    print 'Make your guess ($ => Write Out): '
 
-    puts "You have #{self.guesses_left} guesses remaining"
-    print 'Make your guess: '
-    self.guess_log << gets.chomp.downcase
+    # Loop to validate input before accepting
+    loop do
+      guess = gets.chomp.downcase
+      if guess.include?('$')
+        save_game
+        exit
+      elsif [0,1,2,3,4,5,6,7,8,9,0].include?(guess)
+        puts "That is not a valid input. Please try again."
+      elsif self.guess_log.include?(guess)
+        puts "You've tried that character already."
+        print "Here's the log of your guesses: #{self.guess_log}\n"
+        print "Please try again: "
+      else
+        self.guess_log << guess
+        return guess
+      end
+    end
   end
+
+  def print_art
+    Art.puts_art(NUM_OF_GUESSES - self.guesses_left - 1) unless NUM_OF_GUESSES == self.guesses_left
+  end
+
+  def guesses_remaining
+    puts "Guesses remaining: #{self.guesses_left}"
+  end 
 
   def guess_correct?(sec_wrd_arr = self.secret_word.split(''),char)
     was_char_found = false

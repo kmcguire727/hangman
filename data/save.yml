@@ -1,0 +1,25 @@
+--- !ruby/object:Hangman
+save_path: "./data/"
+game_won: false
+guesses_left: 3
+file_loaded: bin/google-10000-english-no-swears.txt
+secret_word: therefore
+word_display:
+- t
+- h
+- e
+- _
+- e
+- _
+- o
+- _
+- e
+guess_log:
+- a
+- e
+- i
+- o
+- t
+- v
+- h
+- d
